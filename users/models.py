@@ -26,13 +26,18 @@ class User(models.Model):
 
 
 class CaseType(models.Model):
+    CASE_TYPE_CHOICES = (
+        ('murder', 'Murder'),
+        ('theft', 'Theft'),
+        ('crime_against_women', 'Crime Against Women'),
+        ('public_nuisance', 'Public Nuisance'),
+    )
+
     case_type_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True, null=True)
+    name = models.CharField(max_length=30, choices=CASE_TYPE_CHOICES, unique=True)
 
     def __str__(self):
-        return self.name
-
+        return self.get_name_display()
 
 
 class Complaint(models.Model):
@@ -43,8 +48,10 @@ class Complaint(models.Model):
     )
 
     complaint_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    case_type = models.ForeignKey(CaseType, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    
+    case_type = models.ForeignKey(CaseType, on_delete=models.PROTECT)
+
     incident_date = models.DateField()
     incident_time = models.TimeField()
     location = models.TextField()
@@ -54,7 +61,7 @@ class Complaint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.case_type.name} - {self.user.name}"
+        return f"{self.case_type} - {self.user.name}"
 
 
 
