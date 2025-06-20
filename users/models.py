@@ -12,6 +12,7 @@ class User(models.Model):
 
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
+    gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], blank=True, null=True)
     dob = models.DateField()
     phone = models.CharField(max_length=15, unique=True)
     email = models.EmailField(blank=True, null=True)
@@ -43,15 +44,18 @@ class CaseType(models.Model):
 class Complaint(models.Model):
     STATUS_CHOICES = (
         ('pending', 'Pending'),
+        ('awaiting_magistrate', 'Awaiting Magistrate Approval'),
         ('under_review', 'Under Review'),
+        ('fir_registered', 'FIR Registered'),
+        ('gd_recorded', 'GD Recorded'),
         ('resolved', 'Resolved'),
     )
 
     complaint_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
-    
+    officer_assigned = models.ForeignKey('User', on_delete=models.SET_NULL, blank=True, null=True, related_name='assigned_cases', limit_choices_to={'role': 'officer'})
     case_type = models.ForeignKey(CaseType, on_delete=models.PROTECT)
-
+    is_cognizable = models.BooleanField(default=True)
     incident_date = models.DateField()
     incident_time = models.TimeField()
     location = models.TextField()
@@ -85,9 +89,10 @@ class Accused(models.Model):
     complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE, related_name='accused')
     name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    contact_info = models.TextField(blank=True, null=True)
+    statement = models.TextField(blank=True, null=True)
 
-
-
+    
 class Witness(models.Model):
     witness_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE, related_name='witnesses')
