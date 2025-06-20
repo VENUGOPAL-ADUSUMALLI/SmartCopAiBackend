@@ -1,5 +1,27 @@
-# Ignore virtual environment
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
 venv/
-__pycache__
+env/
+.venv/
+
+# SQLite DB
 db.sqlite3
-venv
+
+# Environment variables
+.env
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.mo
+*.swp
+*.sqlite3
+
+# VSCode or PyCharm
+.vscode/
+.idea/
