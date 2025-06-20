@@ -11,9 +11,11 @@ class User(models.Model):
     )
 
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    otp = models.IntegerField(blank=True, null=True) 
     name = models.CharField(max_length=100)
     gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], blank=True, null=True)
     dob = models.DateField()
+    aadhar_number = models.TextField(unique=True,blank=True, null=True)
     phone = models.CharField(max_length=15, unique=True)
     email = models.EmailField(blank=True, null=True)
     permanent_address = models.TextField()
