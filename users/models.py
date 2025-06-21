@@ -65,6 +65,8 @@ class Complaint(models.Model):
     ai_urgency_score = models.IntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
+    incident_location_video_url = models.TextField(blank=True, null=True)
+    incident_type_video_url = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.case_type} - {self.user.name}"
@@ -84,6 +86,7 @@ class Evidence(models.Model):
     file_url = models.TextField()
     type = models.CharField(max_length=10, choices=EVIDENCE_TYPE)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    video_url = models.TextField(blank=True, null=True)
 
 
 class Accused(models.Model):
@@ -93,6 +96,8 @@ class Accused(models.Model):
     description = models.TextField(blank=True, null=True)
     contact_info = models.TextField(blank=True, null=True)
     statement = models.TextField(blank=True, null=True)
+    video_url = models.TextField(blank=True, null=True)
+
 
     
 class Witness(models.Model):
@@ -101,6 +106,8 @@ class Witness(models.Model):
     name = models.CharField(max_length=100)
     contact_info = models.TextField(blank=True, null=True)
     statement = models.TextField(blank=True, null=True)
+    video_url = models.TextField(blank=True, null=True)
+
 
 
 

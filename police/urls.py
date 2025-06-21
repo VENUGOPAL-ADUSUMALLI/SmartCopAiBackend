@@ -11,6 +11,7 @@ urlpatterns = [
     path('si/assign-complaint/', assign_complaint_to_hc_view),
     path("complaint/mark_under_investigation/", mark_under_investigation_view),
     path("police/head_constables/", list_head_constables_view),
+    path("update_complaint_status/v1", update_complaint_status_view),
 
 
 ]

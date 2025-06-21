@@ -2,6 +2,7 @@ from django.db import models
 from users.models import Complaint, User
 import uuid
 
+# 🧭 Enum choices for progress tracking
 PROGRESS_STAGES = [
     ("complaint_registered", "Complaint Registered"),
     ("ai_draft_generated", "AI Draft Generated"),

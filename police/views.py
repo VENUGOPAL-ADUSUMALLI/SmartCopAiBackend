@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from rest_framework import status
+from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from police.interactors.get_head_constable_details import GetHeadConstableDetailsByPhoneInteractor
@@ -9,6 +11,7 @@ from police.interactors.get_complaint_details import GetComplaintDetailsInteract
 from police.interactors.assign_complaint_to_hc import AssignComplaintToHCInteractor
 from police.interactors.mark_under_investigation import MarkUnderInvestigationInteractor
 from police.interactors.list_head_constables import ListHeadConstablesInteractor
+from police.interactors.update_complaint_status import UpdateComplaintStatusInteractor
 
 
 @api_view(['GET'])
@@ -142,3 +145,27 @@ def list_head_constables_view(request):
         return Response({"status": "failed", "error": str(ve)}, status=404)
     except Exception:
         return Response({"status": "failed", "error": "Server error"}, status=500)
+
+@api_view(["POST"])
+@permission_classes([])  # Add permissions as needed
+def update_complaint_status_view(request):
+    try:
+        complaint_id = request.data.get("complaint_id")
+        new_status = request.data.get("status")
+
+        if not complaint_id or not new_status:
+            return Response({"error": "complaint_id and status are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        interactor = UpdateComplaintStatusInteractor(complaint_id, new_status)
+        complaint = interactor.execute()
+
+        return Response({
+            "message": "Complaint status updated successfully",
+            "complaint_id": str(complaint.complaint_id),
+            "new_status": complaint.status
+        }, status=status.HTTP_200_OK)
+
+    except ValidationError as ve:
+        return Response({"error": str(ve)}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

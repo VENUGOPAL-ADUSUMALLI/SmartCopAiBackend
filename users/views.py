@@ -90,7 +90,7 @@ def ai_assessment_view(request):
 @permission_classes([])
 def create_complaint_view(request):
     try:
-        user_id = request.data.get("user_id")
+        user_id = "2d4b7fb4-08a8-40a0-8cf7-8c92a2be1078"
         user = User.objects.get(user_id=user_id)
 
         interactor = CreateComplaintInteractor(data=request.data, user=user)

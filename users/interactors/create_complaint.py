@@ -17,8 +17,8 @@ class CreateComplaintInteractor:
         case_type_obj = CaseType.objects.get(name=case_type_name)
 
         ai_result = get_ai_assessment(incident_summary)
-        ipc_sections = ai_result["ipc_sections"]
-        ai_score = ai_result["AI_urgency_score"]
+        ipc_sections = ai_result.get("ipc_sections", {})
+        ai_score = ai_result.get("AI_urgency_score", 50)
 
         complaint = Complaint.objects.create(
             user=self.user,
